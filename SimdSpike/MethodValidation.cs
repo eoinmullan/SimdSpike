@@ -6,18 +6,18 @@ using static SimdSpike.Utilities;
 
 namespace SimdSpike {
     public static class MethodValidation {
-        public static void ValidateAdditionMethods(params Action<float[], float[], float[]>[] sumActions) {
-            ValidateAdditionMethods((IEnumerable<Action<float[], float[], float[]>>)sumActions);
+        public static void ValidateFloatAdditionMethods(params Action<float[], float[], float[]>[] sumActions) {
+            ValidateFloatAdditionMethods((IEnumerable<Action<float[], float[], float[]>>)sumActions);
         }
 
-        public static void ValidateAdditionInPlaceMethods(params Action<float[], float[]>[] additionInPlaceActions) {
-            ValidateAdditionInPlaceMethods((IEnumerable<Action<float[], float[]>>)additionInPlaceActions);
+        public static void ValidateFloatAdditionInPlaceMethods(params Action<float[], float[]>[] additionInPlaceActions) {
+            ValidateFloatAdditionInPlaceMethods((IEnumerable<Action<float[], float[]>>)additionInPlaceActions);
         }
-        public static void ValidateAdditionFuncs(params Func<float[], float[], float[]>[] sumActions) {
-            ValidateAdditionFuncs((IEnumerable<Func<float[], float[], float[]>>)sumActions);
+        public static void ValidateFloatAdditionFuncs(params Func<float[], float[], float[]>[] sumActions) {
+            ValidateFloatAdditionFuncs((IEnumerable<Func<float[], float[], float[]>>)sumActions);
         }
 
-        private static void ValidateAdditionMethods(IEnumerable<Action<float[], float[], float[]>> sumActions) {
+        private static void ValidateFloatAdditionMethods(IEnumerable<Action<float[], float[], float[]>> sumActions) {
             foreach (var sumAction in sumActions) {
                 ValidateAdditionMethod(sumAction);
             }
@@ -35,7 +35,7 @@ namespace SimdSpike {
             }
         }
 
-        private static void ValidateAdditionInPlaceMethods(IEnumerable<Action<float[], float[]>> additionInPlaceActions) {
+        private static void ValidateFloatAdditionInPlaceMethods(IEnumerable<Action<float[], float[]>> additionInPlaceActions) {
             additionInPlaceActions.Select(x => {
                 return new Action<float[], float[], float[]>((lhs, rhs, result) => {
                     lhs.CopyTo(result, 0);
@@ -44,7 +44,7 @@ namespace SimdSpike {
             }).ToList().ForEach(ValidateAdditionMethod);
         }
 
-        private static void ValidateAdditionFuncs(IEnumerable<Func<float[], float[], float[]>> additionFuncs) {
+        private static void ValidateFloatAdditionFuncs(IEnumerable<Func<float[], float[], float[]>> additionFuncs) {
             additionFuncs.Select(x => {
                 return new Action<float[], float[], float[]>((lhs, rhs, result) => {
                     var temp = x(lhs, rhs);

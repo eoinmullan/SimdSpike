@@ -57,8 +57,10 @@
   <ItemGroup>
     <Compile Include="HardwareAcceleratedArrayUnitTest.cs" />
     <Compile Include="HarewareAcceleratedArray.cs" />
+    <Compile Include="MethodValidation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

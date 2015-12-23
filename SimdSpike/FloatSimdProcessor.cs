@@ -3,7 +3,7 @@ using System.Linq;
 using System.Numerics;
 using NUnit.Framework.Compatibility;
 using static System.Console;
-using static SimdSpike.MethodValidation;
+using static SimdSpike.TestHelper;
 using static SimdSpike.Utilities;
 
 namespace SimdSpike {
@@ -42,27 +42,21 @@ namespace SimdSpike {
             WriteLine($"Hardware speedup:                   {(naiveTimesMs.Average() / hwTimesMs.Average()) * 100:0.00}%");
         }
 
-        public static void ValidateAdditionMethods() {
-            ValidateFloatAdditionMethods(NaiveSum, HwAcceleratedSum);
-            ValidateFloatAdditionInPlaceMethods(NaiveSumInPlace, HwAcceleratedSumInPlace);
-            ValidateFloatAdditionFuncs(NaiveSumFunc);
-        }
-
-        private static void NaiveSum(float[] lhs, float[] rhs, float[] result) {
+        public static void NaiveSum(float[] lhs, float[] rhs, float[] result) {
             var length = lhs.Length;
             for (var i = 0; i < length; ++i) {
                 result[i] = lhs[i] + rhs[i];
             }
         }
 
-        private static void NaiveSumInPlace(float[] lhs, float[] rhs) {
+        public static void NaiveSumInPlace(float[] lhs, float[] rhs) {
             var length = lhs.Length;
             for (var i = 0; i < length; ++i) {
                 lhs[i] += rhs[i];
             }
         }
 
-        private static float[] NaiveSumFunc(float[] lhs, float[] rhs) {
+        public static float[] NaiveSumFunc(float[] lhs, float[] rhs) {
             var length = lhs.Length;
             var result = new float[length];
             for (var i = 0; i < length; ++i) {
@@ -71,7 +65,7 @@ namespace SimdSpike {
             return result;
         }
 
-        private static void HwAcceleratedSum(float[] lhs, float[] rhs, float[] result) {
+        public static void HwAcceleratedSum(float[] lhs, float[] rhs, float[] result) {
             var simdLength = Vector<float>.Count;
             int i;
             for (i = 0; i < lhs.Length - simdLength; i += simdLength) {
@@ -86,7 +80,7 @@ namespace SimdSpike {
             }
         }
 
-        private static void HwAcceleratedSumInPlace(float[] lhs, float[] rhs) {
+        public static void HwAcceleratedSumInPlace(float[] lhs, float[] rhs) {
             int simdLength = Vector<float>.Count;
             int i = 0;
             for (i = 0; i < lhs.Length - simdLength; i += simdLength) {

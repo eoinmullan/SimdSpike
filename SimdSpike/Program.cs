@@ -13,9 +13,6 @@ namespace SimdSpike {
             }
             Write("Hardware acceleration is supported");
 
-            Write("Validating addition methods...");
-            FloatSimdProcessor.ValidateAdditionMethods();
-            WriteLine(" methods correct.");
 
             PrintSimdEffectiveness();
             

@@ -17,7 +17,13 @@ namespace SimdSpike {
             return (ushort)random.Next(ushort.MinValue, ushort.MaxValue);
         }
 
+        public static int RandomInt() {
+            return random.Next(int.MinValue, int.MaxValue);
+        }
+
         internal static ushort[] GetRandomUShortArray(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomUShort()).ToArray();
+
+        internal static int[] GetRandomIntArray(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomInt()).ToArray();
 
         public static void PrintHardwareSpecificSimdEffectiveness() {
             WriteLine($"Simd register is {Vector<int>.Count * sizeof(int)} bytes");

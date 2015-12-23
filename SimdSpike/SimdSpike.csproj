@@ -75,10 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatSimdProcessor.cs" />
+    <Compile Include="IntSimdProcessor.cs" />
     <Compile Include="PerformanceTests.cs" />
     <Compile Include="UnitTests\FloatSimdProcessorUnitTest.cs" />
     <Compile Include="UnitTests\HardwareAcceleratedArrayUnitTest.cs" />
     <Compile Include="HarewareAcceleratedArray.cs" />
+    <Compile Include="UnitTests\IntSimdProcessorUnitTest.cs" />
     <Compile Include="UnitTests\TestHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

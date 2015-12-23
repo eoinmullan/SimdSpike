@@ -2,8 +2,6 @@
 using System.Linq;
 using NUnit.Framework.Compatibility;
 using static System.Console;
-using static SimdSpike.FloatSimdProcessor;
-using static SimdSpike.UShortSimdProcessor;
 using static SimdSpike.Utilities;
 
 namespace SimdSpike {
@@ -24,14 +22,14 @@ namespace SimdSpike {
 
                 floatsOne.CopyTo(floatsOneCopy, 0);
                 stopwatch.Restart();
-                HwAcceleratedSumInPlace(floatsOneCopy, floatsTwo);
+                FloatSimdProcessor.HwAcceleratedSumInPlace(floatsOneCopy, floatsTwo);
                 var hwTimeMs = stopwatch.ElapsedMilliseconds;
                 hwTimesMs.Add(hwTimeMs);
                 WriteLine($"HW accelerated addition took: {hwTimeMs}ms (last value = {floatsOneCopy[floatsOneCopy.Length - 1]}).");
 
                 floatsOne.CopyTo(floatsOneCopy, 0);
                 stopwatch.Restart();
-                NaiveSumInPlace(floatsOneCopy, floatsTwo);
+                FloatSimdProcessor.NaiveSumInPlace(floatsOneCopy, floatsTwo);
                 var naiveTimeMs = stopwatch.ElapsedMilliseconds;
                 naiveTimesMs.Add(naiveTimeMs);
                 WriteLine($"Naive addition took:          {naiveTimeMs}ms (last value = {floatsOneCopy[floatsOneCopy.Length - 1]}).");
@@ -57,14 +55,14 @@ namespace SimdSpike {
 
                 ushortsOne.CopyTo(ushortsOneCopy, 0);
                 stopwatch.Restart();
-                HwAcceleratedSumInPlaceUnchecked(ushortsOneCopy, ushortsTwo);
+                UShortSimdProcessor.HwAcceleratedSumInPlaceUnchecked(ushortsOneCopy, ushortsTwo);
                 var hwTimeMs = stopwatch.ElapsedMilliseconds;
                 hwTimesMs.Add(hwTimeMs);
                 WriteLine($"HW accelerated addition took: {hwTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
 
                 ushortsOne.CopyTo(ushortsOneCopy, 0);
                 stopwatch.Restart();
-                NaiveSumInPlaceUnchecked(ushortsOneCopy, ushortsTwo);
+                UShortSimdProcessor.NaiveSumInPlaceUnchecked(ushortsOneCopy, ushortsTwo);
                 var naiveTimeMs = stopwatch.ElapsedMilliseconds;
                 naiveTimesMs.Add(naiveTimeMs);
                 WriteLine($"Naive addition took:          {naiveTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
@@ -76,9 +74,9 @@ namespace SimdSpike {
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
 
-        public static void TestMinMaxFunctions(int testSetSize) {
+        public static void TestUShortMinMaxFunctions(int testSetSize) {
             WriteLine();
-            Write($"Testing min/max functions, generating test data...");
+            Write($"Testing ushort min/max functions, generating test data...");
             var testData = GetRandomUShortArray(testSetSize);
             WriteLine($" done, testing...");
 
@@ -89,19 +87,48 @@ namespace SimdSpike {
                 ushort max;
 
                 stopwatch.Restart();
-                NaiveMaxMin(testData, out min, out max);
+                UShortSimdProcessor.NaiveMinMax(testData, out min, out max);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive analysis took:                {naiveTimeMs}ms (min: {min}, max: {max}).");
+
+                stopwatch.Restart();
+                UShortSimdProcessor.HWAcceleratedMinMax(testData, out min, out max);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"Hareware accelerated analysis took: {hwTimeMs}ms (min: {min}, max: {max}).");
+            }
+
+            WriteLine("Finding min & max of ushorts");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average()}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
+
+        public static void TestIntMaxMinFunctions(int testSetSize) {
+            WriteLine();
+            Write($"Testing int min/max functions, generating test data...");
+            var testData = GetRandomIntArray(testSetSize);
+            WriteLine($" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                int min, max;
+                stopwatch.Restart();
+                IntSimdProcessor.NaiveMinMax(testData, out min, out max);
                 var naiveTimeMs = stopwatch.ElapsedMilliseconds;
                 naiveTimesMs.Add(naiveTimeMs);
                 WriteLine($"Naive analysis took:                {naiveTimesMs.Average()}ms (min: {min}, max: {max}).");
 
                 stopwatch.Restart();
-                HWAcceleratedMaxMin(testData, out min, out max);
+                IntSimdProcessor.HWAcceleratedMinMax(testData, out min, out max);
                 var hwTimeMs = stopwatch.ElapsedMilliseconds;
                 hwTimesMs.Add(hwTimeMs);
                 WriteLine($"Hareware accelerated analysis took: {hwTimesMs.Average()}ms (min: {min}, max: {max}).");
             }
 
-            WriteLine("Finding min & max of ushorts");
+            WriteLine("Finding min & max of ints");
             WriteLine($"Naive method average time:          {naiveTimesMs.Average()}");
             WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");

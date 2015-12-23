@@ -7,7 +7,6 @@ namespace SimdSpike {
     [TestFixture]
     public class UShortSimdProcessorUnitTest {
         delegate void MinMaxFunc(ushort[] input, out ushort min, out ushort max);
-
         private int testSetSize = 3840*2160;
 
         [Test]
@@ -27,12 +26,12 @@ namespace SimdSpike {
 
         [Test]
         public void ShouldGetMinMaxUsingNaiveMethod() {
-            ValidateMinMaxFunction(NaiveMaxMin);
+            ValidateMinMaxFunction(NaiveMinMax);
         }
 
         [Test]
         public void ShouldGetMinMaxUsingHwAcceleration() {
-            ValidateMinMaxFunction(HWAcceleratedMaxMin);
+            ValidateMinMaxFunction(HWAcceleratedMinMax);
         }
 
         private void ValidateMinMaxFunction(MinMaxFunc minMaxFunc) {

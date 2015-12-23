@@ -40,17 +40,17 @@ namespace SimdSpike {
             }
         }
 
-        internal static void NaiveMaxMin(ushort[] input, out ushort minimum, out ushort maximum) {
+        internal static void NaiveMinMax(ushort[] input, out ushort minimum, out ushort maximum) {
             ushort min = ushort.MaxValue, max = ushort.MinValue;
-            foreach (var t in input) {
-                min = Math.Min(min, t);
-                max = Math.Max(max, t);
+            foreach (var value in input) {
+                min = Math.Min(min, value);
+                max = Math.Max(max, value);
             }
             minimum = min;
             maximum = max;
         }
 
-        internal static void HWAcceleratedMaxMin(ushort[] input, out ushort minimum, out ushort maximum) {
+        internal static void HWAcceleratedMinMax(ushort[] input, out ushort minimum, out ushort maximum) {
             var simdLength = Vector<ushort>.Count;
             var vmin = new Vector<ushort>(ushort.MaxValue);
             var vmax = new Vector<ushort>(ushort.MinValue);

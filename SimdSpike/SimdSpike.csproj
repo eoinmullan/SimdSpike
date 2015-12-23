@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatSimdProcessor.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="UnitTests\FloatSimdProcessorUnitTest.cs" />
     <Compile Include="UnitTests\HardwareAcceleratedArrayUnitTest.cs" />
     <Compile Include="HarewareAcceleratedArray.cs" />

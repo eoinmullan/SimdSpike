@@ -1,10 +1,11 @@
 ﻿using System.Numerics;
 using static System.Console;
+using static SimdSpike.PerformanceTests;
 using static SimdSpike.Utilities;
 
 namespace SimdSpike {
     internal class Program {
-        private const int TestSetSize = 8294400;
+        private const int EightKUltraHDRes = 7680 * 4320;
 
         static void Main() {
             if (!Vector.IsHardwareAccelerated) {
@@ -13,11 +14,10 @@ namespace SimdSpike {
             }
             Write("Hardware acceleration is supported");
 
-
             PrintSimdEffectiveness();
             
-            FloatSimdProcessor.TestInPlaceAddition(TestSetSize);
-            UShortSimdProcessor.TestInPlaceAddition(TestSetSize);
+            TestInPlaceFloatAddition(EightKUltraHDRes);
+            TestInPlaceUShortAddition(EightKUltraHDRes);
         }
     }
 }

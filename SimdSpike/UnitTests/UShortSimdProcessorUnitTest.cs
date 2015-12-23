@@ -5,17 +5,17 @@ namespace SimdSpike {
     public class UShortSimdProcessorUnitTest {
         [Test]
         public void ShouldAddFloatArraysIntoProvidedArray() {
-            TestHelper.ValidateAdditionMethodsUnchecked(UShortSimdProcessor.NaiveSumUnchecked);
+            TestHelper.ValidateAdditionMethodsUnchecked(NaiveSumUnchecked);
         }
 
         [Test]
         public void ShouldAddFloatArraysInPlace() {
-            TestHelper.ValidateAdditionInPlaceMethodsUnchecked(UShortSimdProcessor.NaiveSumInPlaceUnchecked, UShortSimdProcessor.HwAcceleratedSumInPlaceUnchecked);
+            TestHelper.ValidateAdditionInPlaceMethodsUnchecked(NaiveSumInPlaceUnchecked, HwAcceleratedSumInPlaceUnchecked);
         }
 
         [Test]
         public void ShouldAddFloatArraysWithFuncs() {
-            TestHelper.ValidateAdditionFuncsUnchecked(UShortSimdProcessor.NaiveSumFuncUnchecked);
+            TestHelper.ValidateAdditionFuncsUnchecked(NaiveSumFuncUnchecked);
         }
     }
 }

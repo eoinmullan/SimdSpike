@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using static System.Console;
 
@@ -15,6 +16,8 @@ namespace SimdSpike {
         public static ushort RandomUShort() {
             return (ushort)random.Next(ushort.MinValue, ushort.MaxValue);
         }
+
+        internal static ushort[] GetRandomUShortArray(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomUShort()).ToArray();
 
         public static void PrintSimdEffectiveness() {
             WriteLine($"Simd register is {Vector<int>.Count * sizeof(int)} bytes");

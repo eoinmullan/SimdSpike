@@ -18,6 +18,7 @@ namespace SimdSpike {
             
             TestInPlaceFloatAddition(EightKUltraHDRes);
             TestInPlaceUShortAddition(EightKUltraHDRes);
+            TestMinMaxFunctions(EightKUltraHDRes);
         }
     }
 }

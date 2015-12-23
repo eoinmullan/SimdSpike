@@ -75,5 +75,36 @@ namespace SimdSpike {
             WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
+
+        public static void TestMinMaxFunctions(int testSetSize) {
+            WriteLine();
+            Write($"Testing min/max functions, generating test data...");
+            var testData = GetRandomUShortArray(testSetSize);
+            WriteLine($" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                ushort min;
+                ushort max;
+
+                stopwatch.Restart();
+                NaiveMaxMin(testData, out min, out max);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive analysis took:                {naiveTimesMs.Average()}ms (min: {min}, max: {max}).");
+
+                stopwatch.Restart();
+                HWAcceleratedMaxMin(testData, out min, out max);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"Hareware accelerated analysis took: {hwTimesMs.Average()}ms (min: {min}, max: {max}).");
+            }
+
+            WriteLine("Finding min & max of ushorts");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average()}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
     }
 }

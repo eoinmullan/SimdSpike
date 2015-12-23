@@ -10,8 +10,8 @@ namespace SimdSpike {
         public static void TestInPlaceAddition(int testSetSize) {
             WriteLine();
             Write("Testing floats, generating test data...");
-            var ushortsOne = Enumerable.Range(0, testSetSize).Select(x => RandomUShort()).ToArray();
-            var ushortsTwo = Enumerable.Range(0, testSetSize).Select(x => RandomUShort()).ToArray();
+            var ushortsOne = GetRandomTestData(testSetSize);
+            var ushortsTwo = GetRandomTestData(testSetSize);
             WriteLine(" done, testing...");
 
             var sw = new Stopwatch();
@@ -22,14 +22,14 @@ namespace SimdSpike {
 
                 ushortsOne.CopyTo(ushortsOneCopy, 0);
                 sw.Restart();
-                HwAcceleratedSumInPlace(ushortsOneCopy, ushortsTwo);
+                HwAcceleratedSumInPlaceUnchecked(ushortsOneCopy, ushortsTwo);
                 var hwTimeMs = sw.ElapsedMilliseconds;
                 hwTimesMs.Add(hwTimeMs);
                 WriteLine($"HW accelerated addition took: {hwTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
 
                 ushortsOne.CopyTo(ushortsOneCopy, 0);
                 sw.Restart();
-                NaiveSumInPlace(ushortsOneCopy, ushortsTwo);
+                NaiveSumInPlaceUnchecked(ushortsOneCopy, ushortsTwo);
                 var naiveTimeMs = sw.ElapsedMilliseconds;
                 naiveTimesMs.Add(naiveTimeMs);
                 WriteLine($"Naive addition took:          {naiveTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
@@ -41,21 +41,21 @@ namespace SimdSpike {
             WriteLine($"Hardware speedup:                   {(naiveTimesMs.Average() / hwTimesMs.Average()) * 100:0.00}%");
         }
 
-        private static void NaiveSum(ushort[] lhs, ushort[] rhs, ushort[] result) {
+        public static void NaiveSumUnchecked(ushort[] lhs, ushort[] rhs, ushort[] result) {
             var length = lhs.Length;
             for (var i = 0; i < length; ++i) {
                 result[i] = (ushort)(lhs[i] + rhs[i]);
             }
         }
 
-        private static void NaiveSumInPlace(ushort[] lhs, ushort[] rhs) {
+        public static void NaiveSumInPlaceUnchecked(ushort[] lhs, ushort[] rhs) {
             var length = lhs.Length;
             for (var i = 0; i < length; ++i) {
                 lhs[i] += rhs[i];
             }
         }
 
-        private static ushort[] NaiveSumFunc(ushort[] lhs, ushort[] rhs) {
+        public static ushort[] NaiveSumFuncUnchecked(ushort[] lhs, ushort[] rhs) {
             var length = lhs.Length;
             var result = new ushort[length];
             for (var i = 0; i < length; ++i) {
@@ -64,7 +64,7 @@ namespace SimdSpike {
             return result;
         }
 
-        private static void HwAcceleratedSumInPlace(ushort[] lhs, ushort[] rhs) {
+        public static void HwAcceleratedSumInPlaceUnchecked(ushort[] lhs, ushort[] rhs) {
             int simdLength = Vector<ushort>.Count;
             int i = 0;
             for (i = 0; i < lhs.Length - simdLength; i += simdLength) {
@@ -77,5 +77,7 @@ namespace SimdSpike {
                 lhs[i] += rhs[i];
             }
         }
+
+        private static ushort[] GetRandomTestData(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomUShort()).ToArray();
     }
 }

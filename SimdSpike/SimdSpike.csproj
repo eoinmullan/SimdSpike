@@ -56,11 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatSimdProcessor.cs" />
-    <Compile Include="HardwareAcceleratedArrayUnitTest.cs" />
+    <Compile Include="UnitTests\FloatSimdProcessorUnitTest.cs" />
+    <Compile Include="UnitTests\HardwareAcceleratedArrayUnitTest.cs" />
     <Compile Include="HarewareAcceleratedArray.cs" />
-    <Compile Include="MethodValidation.cs" />
+    <Compile Include="UnitTests\TestHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\UShortSimdProcessorUnitTest.cs" />
     <Compile Include="UShortSimdProcessor.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

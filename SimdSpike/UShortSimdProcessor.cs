@@ -6,7 +6,7 @@ namespace SimdSpike {
         public static void NaiveSumUnchecked(ushort[] lhs, ushort[] rhs, ushort[] result) {
             var length = lhs.Length;
             for (var i = 0; i < length; ++i) {
-                result[i] = (ushort)(lhs[i] + rhs[i]);
+                result[i] = (ushort) (lhs[i] + rhs[i]);
             }
         }
 
@@ -21,7 +21,7 @@ namespace SimdSpike {
             var length = lhs.Length;
             var result = new ushort[length];
             for (var i = 0; i < length; ++i) {
-                result[i] = (ushort)(lhs[i] + rhs[i]);
+                result[i] = (ushort) (lhs[i] + rhs[i]);
             }
             return result;
         }
@@ -40,5 +40,34 @@ namespace SimdSpike {
             }
         }
 
+        internal static void NaiveMaxMin(ushort[] input, out ushort minimum, out ushort maximum) {
+            ushort min = ushort.MaxValue, max = ushort.MinValue;
+            foreach (var t in input) {
+                min = Math.Min(min, t);
+                max = Math.Max(max, t);
+            }
+            minimum = min;
+            maximum = max;
+        }
+
+        internal static void HWAcceleratedMaxMin(ushort[] input, out ushort minimum, out ushort maximum) {
+            var simdLength = Vector<ushort>.Count;
+            var vmin = new Vector<ushort>(ushort.MaxValue);
+            var vmax = new Vector<ushort>(ushort.MinValue);
+            for (var i = 0; i < input.Length; i += simdLength) {
+                var va = new Vector<ushort>(input, i);
+                var vLessThan = Vector.LessThan(va, vmin);
+                vmin = Vector.ConditionalSelect(vLessThan, va, vmin);
+                var vGreaterThan = Vector.GreaterThan(va, vmax);
+                vmax = Vector.ConditionalSelect(vGreaterThan, va, vmax);
+            }
+            ushort min = ushort.MaxValue, max = ushort.MinValue;
+            for (var i = 0; i < simdLength; ++i) {
+                min = Math.Min(min, vmin[i]);
+                max = Math.Max(max, vmax[i]);
+            }
+            minimum = min;
+            maximum = max;
+        }
     }
 }

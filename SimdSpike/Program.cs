@@ -13,6 +13,7 @@ namespace SimdSpike {
                 return;
             }
             Write("Hardware acceleration is supported");
+            WriteLine("Hardware acceleration is supported");
 
             PrintHardwareSpecificSimdEffectiveness();
             

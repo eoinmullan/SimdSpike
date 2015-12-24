@@ -36,8 +36,8 @@ namespace SimdSpike {
             }
 
             WriteLine("Testing float array addition");
-            WriteLine($"Naive method average time:          {naiveTimesMs.Average()}");
-            WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
 
@@ -69,8 +69,8 @@ namespace SimdSpike {
             }
 
             WriteLine("Testing ushort array addition");
-            WriteLine($"Naive method average time:          {naiveTimesMs.Average()}");
-            WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
 
@@ -100,8 +100,8 @@ namespace SimdSpike {
             }
 
             WriteLine("Finding min & max of ushorts");
-            WriteLine($"Naive method average time:          {naiveTimesMs.Average()}");
-            WriteLine($"HW accelerated method average time: {hwTimesMs.Average()}");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
 
@@ -119,13 +119,13 @@ namespace SimdSpike {
                 IntSimdProcessor.NaiveMinMax(testData, out min, out max);
                 var naiveTimeMs = stopwatch.ElapsedMilliseconds;
                 naiveTimesMs.Add(naiveTimeMs);
-                WriteLine($"Naive analysis took:                {naiveTimesMs.Average()}ms (min: {min}, max: {max}).");
+                WriteLine($"Naive analysis took:                {naiveTimesMs.Average():.##}ms (min: {min}, max: {max}).");
 
                 stopwatch.Restart();
                 IntSimdProcessor.HWAcceleratedMinMax(testData, out min, out max);
                 var hwTimeMs = stopwatch.ElapsedMilliseconds;
                 hwTimesMs.Add(hwTimeMs);
-                WriteLine($"Hareware accelerated analysis took: {hwTimesMs.Average()}ms (min: {min}, max: {max}).");
+                WriteLine($"Hareware accelerated analysis took: {hwTimesMs.Average():.##}ms (min: {min}, max: {max}).");
             }
 
             WriteLine("Finding min & max of ints");

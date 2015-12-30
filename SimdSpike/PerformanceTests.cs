@@ -10,7 +10,7 @@ namespace SimdSpike {
 
         public static void TestInPlaceFloatAddition(int testSetSize) {
             WriteLine();
-            Write("Testing floats, generating test data...");
+            Write("Testing float array addition, generating test data...");
             var floatsOne = Enumerable.Range(0, testSetSize).Select(x => RandomFloat()).ToArray();
             var floatsTwo = Enumerable.Range(0, testSetSize).Select(x => RandomFloat()).ToArray();
             WriteLine(" done, testing...");
@@ -43,7 +43,7 @@ namespace SimdSpike {
 
         public static void TestInPlaceUShortAddition(int testSetSize) {
             WriteLine();
-            Write("Testing floats, generating test data...");
+            Write("Testing ushort array addition, generating test data...");
             var ushortsOne = GetRandomUShortArray(testSetSize);
             var ushortsTwo = GetRandomUShortArray(testSetSize);
             WriteLine(" done, testing...");

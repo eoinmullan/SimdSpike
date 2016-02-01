@@ -22,6 +22,8 @@ namespace SimdSpike {
             return random.Next(int.MinValue, int.MaxValue);
         }
 
+        internal static float[] GetRandomFloatArray(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomFloat()).ToArray();
+
         internal static ushort[] GetRandomUShortArray(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomUShort()).ToArray();
 
         internal static int[] GetRandomIntArray(int testSetSize) => Enumerable.Range(0, testSetSize).Select(x => RandomInt()).ToArray();

@@ -11,8 +11,8 @@ namespace SimdSpike {
         public static void TestInPlaceFloatAddition(int testSetSize) {
             WriteLine();
             Write("Testing float array addition, generating test data...");
-            var floatsOne = Enumerable.Range(0, testSetSize).Select(x => RandomFloat()).ToArray();
-            var floatsTwo = Enumerable.Range(0, testSetSize).Select(x => RandomFloat()).ToArray();
+            var floatsOne = GetRandomFloatArray(testSetSize);
+            var floatsTwo = GetRandomFloatArray(testSetSize);
             WriteLine(" done, testing...");
             
             var naiveTimesMs = new List<long>();

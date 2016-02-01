@@ -41,7 +41,8 @@ namespace SimdSpike {
         }
 
         internal static void NaiveMinMax(ushort[] input, out ushort minimum, out ushort maximum) {
-            ushort min = ushort.MaxValue, max = ushort.MinValue;
+            var min = ushort.MaxValue;
+            var max = ushort.MinValue;
             foreach (var value in input) {
                 min = Math.Min(min, value);
                 max = Math.Max(max, value);
@@ -50,24 +51,27 @@ namespace SimdSpike {
             maximum = max;
         }
 
-        internal static void HWAcceleratedMinMax(ushort[] input, out ushort minimum, out ushort maximum) {
+        internal static void HWAcceleratedMinMax(ushort[] input, out ushort min, out ushort max) {
             var simdLength = Vector<ushort>.Count;
             var vmin = new Vector<ushort>(ushort.MaxValue);
             var vmax = new Vector<ushort>(ushort.MinValue);
-            for (var i = 0; i < input.Length; i += simdLength) {
+            var i = 0;
+            var lastSafeVectorIndex = input.Length - simdLength;
+            for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
                 var va = new Vector<ushort>(input, i);
-                var vLessThan = Vector.LessThan(va, vmin);
-                vmin = Vector.ConditionalSelect(vLessThan, va, vmin);
-                var vGreaterThan = Vector.GreaterThan(va, vmax);
-                vmax = Vector.ConditionalSelect(vGreaterThan, va, vmax);
+                vmin = Vector.Min(va, vmin);
+                vmax = Vector.Max(va, vmax);
             }
-            ushort min = ushort.MaxValue, max = ushort.MinValue;
-            for (var i = 0; i < simdLength; ++i) {
-                min = Math.Min(min, vmin[i]);
-                max = Math.Max(max, vmax[i]);
+            min = ushort.MaxValue;
+            max = ushort.MinValue;
+            for (var j = 0; j < simdLength; ++j) {
+                min = Math.Min(min, vmin[j]);
+                max = Math.Max(max, vmax[j]);
             }
-            minimum = min;
-            maximum = max;
+            for (; i < input.Length; ++i) {
+                min = Math.Min(min, input[i]);
+                max = Math.Max(max, input[i]);
+            }
         }
     }
 }

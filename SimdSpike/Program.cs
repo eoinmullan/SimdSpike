@@ -27,6 +27,9 @@ namespace SimdSpike {
             TestUShortMinMaxFunctions(EightKUltraHDRes);
             TestUshortArrayTotalFunctions(EightKUltraHDRes);
             TestUshortArrayUncheckedTotalFunctions(EightKUltraHDRes);
+
+            WriteLine("Press any key to exit");
+            ReadKey();
         }
     }
 }

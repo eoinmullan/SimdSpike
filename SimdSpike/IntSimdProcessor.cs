@@ -13,24 +13,27 @@ namespace SimdSpike {
             maximum = max;
         }
 
-        public static void HWAcceleratedMinMax(int[] input, out int minimum, out int maximum) {
+        public static void HWAcceleratedMinMax(int[] input, out int min, out int max) {
             var simdLength = Vector<int>.Count;
             var vmin = new Vector<int>(int.MaxValue);
             var vmax = new Vector<int>(int.MinValue);
-            for (var i = 0; i < input.Length; i += simdLength) {
+            var i = 0;
+            var lastSafeVectorIndex = input.Length - simdLength;
+            for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
                 var va = new Vector<int>(input, i);
-                var vLessThan = Vector.LessThan(va, vmin);
-                vmin = Vector.ConditionalSelect(vLessThan, va, vmin);
-                var vGreaterThan = Vector.GreaterThan(va, vmax);
-                vmax = Vector.ConditionalSelect(vGreaterThan, va, vmax);
+                vmin = Vector.Min(va, vmin);
+                vmax = Vector.Max(va, vmax);
             }
-            int min = int.MaxValue, max = int.MinValue;
-            for (int i = 0; i < simdLength; ++i) {
-                min = Math.Min(min, vmin[i]);
-                max = Math.Max(max, vmax[i]);
+            min = int.MaxValue;
+            max = int.MinValue;
+            for (var j = 0; j < simdLength; ++j) {
+                min = Math.Min(min, vmin[j]);
+                max = Math.Max(max, vmax[j]);
             }
-            minimum = min;
-            maximum = max;
+            for (; i < input.Length; ++i) {
+                min = Math.Min(min, input[i]);
+                max = Math.Max(max, input[i]);
+            }
         }
     }
 }

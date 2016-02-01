@@ -6,7 +6,8 @@ using static SimdSpike.Utilities;
 namespace SimdSpike {
     public class IntSimdProcessorUnitTest {
         delegate void MinMaxFunc(int[] input, out int min, out int max);
-        private int testSetSize = 3840 * 2160;
+        private int hdImageSize = 3840 * 2160;
+        private int smallTestSet = 15;
 
         [Test]
         public void ShouldGetMinMaxUsingNaiveMethod() {
@@ -19,15 +20,17 @@ namespace SimdSpike {
         }
 
         private void ValidateMinMaxFunction(MinMaxFunc minMaxFunc) {
-            var testDataSet = GetRandomIntArray(testSetSize);
-            var expectedMin = testDataSet.Min();
-            var expectedMax = testDataSet.Max();
+            foreach (var testSetSize in new[] {smallTestSet, hdImageSize}) {
+                var testDataSet = GetRandomIntArray(testSetSize);
+                var expectedMin = testDataSet.Min();
+                var expectedMax = testDataSet.Max();
 
-            int calculatedMin, calculatedMax;
-            minMaxFunc(testDataSet, out calculatedMin, out calculatedMax);
+                int calculatedMin, calculatedMax;
+                minMaxFunc(testDataSet, out calculatedMin, out calculatedMax);
 
-            Assert.AreEqual(expectedMin, calculatedMin);
-            Assert.AreEqual(expectedMax, calculatedMax);
+                Assert.AreEqual(expectedMin, calculatedMin);
+                Assert.AreEqual(expectedMax, calculatedMax);
+            }
         }
     }
 }

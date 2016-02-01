@@ -7,6 +7,7 @@ namespace SimdSpike {
     [TestFixture]
     public class UShortSimdProcessorUnitTest {
         delegate void MinMaxFunc(ushort[] input, out ushort min, out ushort max);
+        delegate uint TotalOFArrayFunc(ushort[] input);
         private int hdImageSize = 3840*2160;
         private int smallTestSet = 15;
 
@@ -33,6 +34,27 @@ namespace SimdSpike {
         [Test]
         public void ShouldGetMinMaxUsingHwAcceleration() {
             ValidateMinMaxFunction(HWAcceleratedMinMax);
+        }
+
+        [Test]
+        public void ShouldGetTotalOfArrayUsingNaiveMethod() {
+            ValidateTotalOfArrayFunction(NaiveTotalOfArray);
+        }
+
+        [Test]
+        public void ShouldGetTotalOfArrayUsingHWAcceleratedMethod() {
+            ValidateTotalOfArrayFunction(HWAcceleratedTotalOfArray);
+        }
+
+        private void ValidateTotalOfArrayFunction(TotalOFArrayFunc totalFunc) {
+            foreach (var testSetSize in new[] { smallTestSet, hdImageSize }) {
+                var testDataSet = GetRandomUShortArray(testSetSize);
+                var expectedTotal = testDataSet.Aggregate<ushort, uint>(0, (current, value) => current + value);
+
+                var calculatedTotal = totalFunc(testDataSet);
+
+                Assert.AreEqual(expectedTotal, calculatedTotal, $"Failed to calculate total for {nameof(smallTestSet)}");
+            }
         }
 
         private void ValidateMinMaxFunction(MinMaxFunc minMaxFunc) {

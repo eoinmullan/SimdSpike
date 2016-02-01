@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace SimdSpike {
@@ -72,6 +74,30 @@ namespace SimdSpike {
                 min = Math.Min(min, input[i]);
                 max = Math.Max(max, input[i]);
             }
+        }
+
+        internal static uint NaiveTotalOfArray(ushort[] input) {
+            return input.Aggregate<ushort, uint>(0, (current, value) => current + value);
+        }
+
+        internal static uint HWAcceleratedTotalOfArray(ushort[] input) {
+            var uintArray = Array.ConvertAll(input, x => (uint) x);
+            var simdLength = Vector<uint>.Count;
+            var vTotal = new Vector<uint>(0);
+            var i = 0;
+            var lastSafeVectorIndex = uintArray.Length - simdLength;
+            for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
+                var vector = new Vector<uint>(uintArray, i);
+                vTotal = Vector.Add(vTotal, vector);
+            }
+            uint total = 0;
+            for (var j = 0; j < simdLength; ++j) {
+                total += vTotal[j];
+            }
+            for (; i < input.Length; ++i) {
+                total += input[i];
+            }
+            return total;
         }
     }
 }

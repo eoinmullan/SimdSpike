@@ -161,5 +161,33 @@ namespace SimdSpike {
             WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
+
+        public static void TestUshortArrayUncheckedTotalFunctions(int testSetSize) {
+            WriteLine();
+            Write($"Testing ushort array unchecked total functions, generating test data...");
+            var testData = GetRandomUShortArray(testSetSize);
+            WriteLine($" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                stopwatch.Restart();
+                var total = UShortSimdProcessor.NaiveUncheckedTotalOfArray(testData);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive analysis took:                {naiveTimeMs}ms (total: {total}).");
+
+                stopwatch.Restart();
+                total = UShortSimdProcessor.HWAcceleratedUncheckedTotalOfArray(testData);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"Hareware accelerated analysis took: {hwTimeMs}ms (total: {total}).");
+            }
+
+            WriteLine("Finding total of array of ushorts");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
     }
 }

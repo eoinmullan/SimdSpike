@@ -46,6 +46,14 @@ namespace SimdSpike {
             ValidateTotalOfArrayFunction(HWAcceleratedTotalOfArray);
         }
 
+        [Test]
+        public void ShouldGetUncheckedTotalOfArrayUsingNaiveAndHWAcceleratedMethod() {
+            foreach (var testSetSize in new[] {smallTestSet, hdImageSize}) {
+                var testDataSet = GetRandomUShortArray(testSetSize);
+                Assert.AreEqual(NaiveUncheckedTotalOfArray(testDataSet), HWAcceleratedUncheckedTotalOfArray(testDataSet));
+            }
+        }
+
         private void ValidateTotalOfArrayFunction(TotalOFArrayFunc totalFunc) {
             foreach (var testSetSize in new[] { smallTestSet, hdImageSize }) {
                 var testDataSet = GetRandomUShortArray(testSetSize);

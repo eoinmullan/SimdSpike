@@ -80,6 +80,15 @@ namespace SimdSpike {
             return input.Aggregate<ushort, uint>(0, (current, value) => current + value);
         }
 
+        internal static ushort NaiveUncheckedTotalOfArray(ushort[] input) {
+            var result = 0;
+            unchecked {
+                foreach (var value in input)
+                    result = result + value;
+            }
+            return (ushort)result;
+        }
+
         internal static uint HWAcceleratedTotalOfArray(ushort[] input) {
             var uintArray = Array.ConvertAll(input, x => (uint) x);
             var simdLength = Vector<uint>.Count;
@@ -91,6 +100,25 @@ namespace SimdSpike {
                 vTotal = Vector.Add(vTotal, vector);
             }
             uint total = 0;
+            for (var j = 0; j < simdLength; ++j) {
+                total += vTotal[j];
+            }
+            for (; i < input.Length; ++i) {
+                total += input[i];
+            }
+            return total;
+        }
+
+        internal static ushort HWAcceleratedUncheckedTotalOfArray(ushort[] input) {
+            var simdLength = Vector<ushort>.Count;
+            var vTotal = new Vector<ushort>(0);
+            var i = 0;
+            var lastSafeVectorIndex = input.Length - simdLength;
+            for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
+                var vector = new Vector<ushort>(input, i);
+                vTotal = Vector.Add(vTotal, vector);
+            }
+            ushort total = 0;
             for (var j = 0; j < simdLength; ++j) {
                 total += vTotal[j];
             }

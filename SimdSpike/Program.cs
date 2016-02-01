@@ -26,6 +26,7 @@ namespace SimdSpike {
             TestIntMaxMinFunctions(EightKUltraHDRes);
             TestUShortMinMaxFunctions(EightKUltraHDRes);
             TestUshortArrayTotalFunctions(EightKUltraHDRes);
+            TestUshortArrayUncheckedTotalFunctions(EightKUltraHDRes);
         }
     }
 }

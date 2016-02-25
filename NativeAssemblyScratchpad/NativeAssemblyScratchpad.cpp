@@ -17,7 +17,7 @@ void GetRandomFloats(unsigned short* input, int size) {
 		input[i] = rand() % 10;
 	}
 }
-
+int gi;
 void PerformSimdArrayAddition(unsigned short* lhs, unsigned short* rhs, int setSize);
 void PerformNaiveArrayAddition(unsigned short* lhs, unsigned short* rhs, int setSize);
 
@@ -29,6 +29,7 @@ int main() {
 	GetRandomFloats(rhs, testSetSize);
 
 	PerformSimdArrayAddition(lhs, rhs, testSetSize);
+	PerformNaiveArrayAddition(lhs, rhs, testSetSize);
 
 	cin.ignore();
 
@@ -52,6 +53,9 @@ int main() {
 	}
 
 	for (auto i = 0; i < setSize; i++) {
+		if (result[i] != lhs[i] + rhs[i]) {
+			cout << "HW accelerated addition error at index" << i << endl;
+		}
 		cout << lhs[i] << " + " << rhs[i] << " = " << result[i] << " " << (lhs[i] + rhs[i] == result[i] ? "(correct)" : "(wrong)") << endl;
 	}
 
@@ -63,5 +67,17 @@ outofbounds:
 }
 
 void PerformNaiveArrayAddition(unsigned short* lhs, unsigned short* rhs, int setSize) {
+	auto result = new unsigned short[setSize];
+
+	for (gi = 0; gi < setSize; gi++) {	// gi declared at global scope to prevent unwanted compiler optimizations
+		result[gi] = lhs[gi] + rhs[gi];
+	}
+
+	for (auto i = 0; i < setSize; i++) {
+		if (result[i] != lhs[i] + rhs[i]) {
+			cout << "HW accelerated addition error at index" << i << endl;
+		}
+		cout << lhs[i] << " + " << rhs[i] << " = " << result[i] << " " << (lhs[i] + rhs[i] == result[i] ? "(correct)" : "(wrong)") << endl;
+	}
 	return;
 }

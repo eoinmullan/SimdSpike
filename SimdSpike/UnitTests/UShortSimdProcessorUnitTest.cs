@@ -54,6 +54,11 @@ namespace SimdSpike {
             }
         }
 
+        [Test]
+        public void ShouldAddUShortArraysIntoProvidedArray() {
+            TestHelper.ValidateAdditionMethodsUnchecked(HwAcceleratedSumUnchecked);
+        }
+
         private void ValidateTotalOfArrayFunction(TotalOFArrayFunc totalFunc) {
             foreach (var testSetSize in new[] { smallTestSet, hdImageSize }) {
                 var testDataSet = GetRandomUShortArray(testSetSize);

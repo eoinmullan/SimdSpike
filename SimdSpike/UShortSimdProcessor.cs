@@ -42,6 +42,19 @@ namespace SimdSpike {
             }
         }
 
+        public static void HwAcceleratedSumUnchecked(ushort[] lhs, ushort[] rhs, ushort[] result) {
+            var simdLength = Vector<ushort>.Count;
+            var i = 0;
+            for (i = 0; i < lhs.Length - simdLength; i += simdLength) {
+                var va = new Vector<ushort>(lhs, i);
+                var vb = new Vector<ushort>(rhs, i);
+                (va + vb).CopyTo(result, i);
+            }
+            for (; i < lhs.Length; ++i) {
+                result[i] = (ushort)(lhs[i] + rhs[i]);
+            }
+        }
+
         internal static void NaiveMinMax(ushort[] input, out ushort minimum, out ushort maximum) {
             var min = ushort.MaxValue;
             var max = ushort.MinValue;

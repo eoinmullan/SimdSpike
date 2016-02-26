@@ -43,11 +43,11 @@ namespace SimdSpike {
 
         public static void TestInPlaceUShortAddition(int testSetSize) {
             WriteLine();
-            Write("Testing ushort array addition, generating test data...");
+            Write("Testing ushort array in place addition, generating test data...");
             var ushortsOne = GetRandomUShortArray(testSetSize);
             var ushortsTwo = GetRandomUShortArray(testSetSize);
             WriteLine(" done, testing...");
-            
+
             var naiveTimesMs = new List<long>();
             var hwTimesMs = new List<long>();
             for (var i = 0; i < 3; i++) {
@@ -66,6 +66,36 @@ namespace SimdSpike {
                 var naiveTimeMs = stopwatch.ElapsedMilliseconds;
                 naiveTimesMs.Add(naiveTimeMs);
                 WriteLine($"Naive addition took:          {naiveTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
+            }
+
+            WriteLine("Testing ushort array addition");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
+
+        public static void TestUShortAdditionIntoResultsArray(int testSetSize) {
+            WriteLine();
+            Write("Testing ushort array addition into results array, generating test data...");
+            var ushortsOne = GetRandomUShortArray(testSetSize);
+            var ushortsTwo = GetRandomUShortArray(testSetSize);
+            var result = new ushort[testSetSize];
+            WriteLine(" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                stopwatch.Restart();
+                UShortSimdProcessor.HwAcceleratedSumUnchecked(ushortsOne, ushortsTwo, result);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"HW accelerated addition took: {hwTimeMs}ms (last value = {result[result.Length - 1]}).");
+                
+                stopwatch.Restart();
+                UShortSimdProcessor.NaiveSumUnchecked(ushortsOne, ushortsTwo, result);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive addition took:          {naiveTimeMs}ms (last value = {result[result.Length - 1]}).");
             }
 
             WriteLine("Testing ushort array addition");

@@ -22,6 +22,7 @@ namespace SimdSpike {
             PrintHardwareSpecificSimdEffectiveness();
          
             TestInPlaceFloatAddition(EightKUltraHDRes);
+            TestUShortAdditionIntoResultsArray(EightKUltraHDRes);
             TestInPlaceUShortAddition(EightKUltraHDRes);
             TestIntMaxMinFunctions(EightKUltraHDRes);
             TestUShortMinMaxFunctions(EightKUltraHDRes);

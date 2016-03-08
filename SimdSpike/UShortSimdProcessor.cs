@@ -166,12 +166,17 @@ namespace SimdSpike {
             ulong total = 0;
             var lastSafeVectorIndex = input.Length - simdLength;
             for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
-                var va = new Vector<ushort>(input, i);
-                vmin = Vector.Min(va, vmin);
-                vmax = Vector.Max(va, vmax);
-                for (var j = i; j < i + simdLength; j++) {
-                    total += input[j];
-                }
+                total += input[i];
+                total += input[i + 1];
+                total += input[i + 2];
+                total += input[i + 3];
+                total += input[i + 4];
+                total += input[i + 5];
+                total += input[i + 6];
+                total += input[i + 7];
+                var vector = new Vector<ushort>(input, i);
+                vmin = Vector.Min(vector, vmin);
+                vmax = Vector.Max(vector, vmax);
             }
             min = ushort.MaxValue;
             max = ushort.MinValue;
@@ -184,7 +189,7 @@ namespace SimdSpike {
                 max = Math.Max(max, input[i]);
                 total += input[i];
             }
-            average = total/(double) input.Length;
+            average = total / (double)input.Length;
         }
     }
 }

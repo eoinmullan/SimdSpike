@@ -90,7 +90,12 @@ namespace SimdSpike {
         }
 
         internal static uint NaiveTotalOfArray(ushort[] input) {
-            return input.Aggregate<ushort, uint>(0, (current, value) => current + value);
+            uint total = 0;
+            foreach (var value in input) {
+                total += value;
+            }
+
+            return total;
         }
 
         internal static ushort NaiveUncheckedTotalOfArray(ushort[] input) {
@@ -139,6 +144,48 @@ namespace SimdSpike {
                 total += input[i];
             }
             return total;
+        }
+
+        internal static void NaiveGetStats(ushort[] input, out ushort min, out ushort max, out double average) {
+            min = ushort.MaxValue;
+            max = ushort.MinValue;
+            ulong total = 0;
+            foreach (var value in input) {
+                if (value < min) min = value;
+                if (value > max) max = value;
+                total += value;
+            }
+            average = total / (double)input.Length;
+        }
+
+        internal static void HWAcceleratedGetStats(ushort[] input, out ushort min, out ushort max, out double average) {
+            var uintArray = Array.ConvertAll(input, x => (ulong)x);
+            var simdLength = Vector<ulong>.Count;
+            var vmin = new Vector<ulong>(ulong.MaxValue);
+            var vmax = new Vector<ulong>(ulong.MinValue);
+            var vTotal = new Vector<ulong>(0);
+            var i = 0;
+            var lastSafeVectorIndex = uintArray.Length - simdLength;
+            for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
+                var va = new Vector<ulong>(uintArray, i);
+                vmin = Vector.Min(va, vmin);
+                vmax = Vector.Max(va, vmax);
+                vTotal = Vector.Add(vTotal, va);
+            }
+            min = ushort.MaxValue;
+            max = ushort.MinValue;
+            ulong total = 0;
+            for (var j = 0; j < simdLength; ++j) {
+                min = Math.Min(min, (ushort)vmin[j]);
+                max = Math.Max(max, (ushort)vmax[j]);
+                total += vTotal[j];
+            }
+            for (; i < input.Length; ++i) {
+                min = Math.Min(min, input[i]);
+                max = Math.Max(max, input[i]);
+                total += input[i];
+            }
+            average = total / (double)input.Length;
         }
     }
 }

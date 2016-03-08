@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using static SimdSpike.UShortSimdProcessor;
 using static SimdSpike.Utilities;
@@ -57,6 +58,29 @@ namespace SimdSpike {
         [Test]
         public void ShouldAddUShortArraysIntoProvidedArray() {
             TestHelper.ValidateAdditionMethodsUnchecked(HwAcceleratedSumUnchecked);
+        }
+
+        [Test]
+        public void ShouldGetStats() {
+            foreach (var testSetSize in new[] {smallTestSet, hdImageSize}) {
+                var testDataSet = GetRandomUShortArray(testSetSize);
+                ushort min, max;
+                double average;
+
+                var expectedMin = testDataSet.Min();
+                var expectedMax = testDataSet.Max();
+                var expectedAverage = testDataSet.Select(x => (int)x).Average();
+
+                NaiveGetStats(testDataSet, out min, out max, out average);
+                Assert.AreEqual(expectedMin, min, "Naive Min incorrect");
+                Assert.AreEqual(expectedMax, max, "Naive Max incorrect");
+                Assert.AreEqual(expectedAverage, average, "Naive Average incorrect");
+
+                HWAcceleratedGetStats(testDataSet, out min, out max, out average);
+                Assert.AreEqual(expectedMin, min, "HW Min incorrect");
+                Assert.AreEqual(expectedMax, max, "HW Max incorrect");
+                Assert.AreEqual(expectedAverage, average, "HW Average incorrect");
+            }
         }
 
         private void ValidateTotalOfArrayFunction(TotalOFArrayFunc totalFunc) {

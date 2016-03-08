@@ -281,5 +281,35 @@ namespace SimdSpike {
             WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
+
+        public static void TestUshortArrayStats(int testSetSize) {
+            WriteLine();
+            Write($"Testing ushort array stats functions, generating test data...");
+            var testData = GetRandomUShortArray(testSetSize);
+            WriteLine($" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                stopwatch.Restart();
+                ushort max, min;
+                double average;
+                UShortSimdProcessor.NaiveGetStats(testData, out min, out max, out average);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive analysis took:                {naiveTimeMs}ms (min: {min}, max: {max}, average: {average}).");
+
+                stopwatch.Restart();
+                UShortSimdProcessor.HWAcceleratedGetStats(testData, out min, out max, out average);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"Hareware accelerated analysis took: {hwTimeMs}ms (min: {min}, max: {max}, average: {average}).");
+            }
+
+            WriteLine("Finding stats of array of ushorts");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
     }
 }

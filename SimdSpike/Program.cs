@@ -20,7 +20,8 @@ namespace SimdSpike {
             WriteLine("Hardware acceleration is supported");
 
             PrintHardwareSpecificSimdEffectiveness();
-         
+
+            TestIntArrayAdditionFunctions(EightKUltraHDRes);
             TestInPlaceFloatAddition(EightKUltraHDRes);
             TestUShortAdditionIntoResultsArray(EightKUltraHDRes);
             TestInPlaceUShortAddition(EightKUltraHDRes);

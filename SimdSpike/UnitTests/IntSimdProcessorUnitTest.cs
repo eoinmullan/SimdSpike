@@ -19,6 +19,12 @@ namespace SimdSpike {
             ValidateMinMaxFunction(HWAcceleratedMinMax);
         }
 
+        [Test]
+        public void ShouldAddIntArraysWithFuncs() {
+            TestHelper.ValidateAdditionFuncsUnchecked(NaiveSumFunc);
+            TestHelper.ValidateAdditionFuncsUnchecked(HWAcceleratedSumFunc);
+        }
+
         private void ValidateMinMaxFunction(MinMaxFunc minMaxFunc) {
             foreach (var testSetSize in new[] {smallTestSet, hdImageSize}) {
                 var testDataSet = GetRandomIntArray(testSetSize);

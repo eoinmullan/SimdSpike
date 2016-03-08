@@ -30,6 +30,10 @@ namespace SimdSpike {
             ValidateAdditionFuncsUnchecked((IEnumerable<Func<ushort[], ushort[], ushort[]>>)sumActions);
         }
 
+        public static void ValidateAdditionFuncsUnchecked(params Func<int[], int[], int[]>[] sumActions) {
+            ValidateAdditionFuncsUnchecked((IEnumerable<Func<int[], int[], int[]>>)sumActions);
+        }
+
         private static void ValidateAdditionMethods(IEnumerable<Action<float[], float[], float[]>> sumActions) {
             foreach (var sumAction in sumActions) {
                 ValidateAdditionMethod(sumAction);
@@ -66,6 +70,18 @@ namespace SimdSpike {
             }
         }
 
+        private static void ValidateAdditionMethodUnchecked(Action<int[], int[], int[]> sumAction) {
+            const int count = 23;
+            var one = Enumerable.Range(0, count).Select(x => RandomInt()).ToArray();
+            var two = Enumerable.Range(0, count).Select(x => RandomInt()).ToArray();
+            var sum = new int[one.Length];
+            sumAction(one, two, sum);
+
+            for (var i = 0; i < one.Length; i++) {
+                Assert.AreEqual(one[i] + two[i], sum[i], $"Sum differs at index {i}, {one[i]} + {two[i]}");
+            }
+        }
+
         private static void ValidateAdditionInPlaceMethods(IEnumerable<Action<float[], float[]>> additionInPlaceActions) {
             additionInPlaceActions.Select(x => {
                 return new Action<float[], float[], float[]>((lhs, rhs, result) => {
@@ -96,6 +112,15 @@ namespace SimdSpike {
         private static void ValidateAdditionFuncsUnchecked(IEnumerable<Func<ushort[], ushort[], ushort[]>> additionFuncs) {
             additionFuncs.Select(x => {
                 return new Action<ushort[], ushort[], ushort[]>((lhs, rhs, result) => {
+                    var temp = x(lhs, rhs);
+                    temp.CopyTo(result, 0);
+                });
+            }).ToList().ForEach(ValidateAdditionMethodUnchecked);
+        }
+
+        private static void ValidateAdditionFuncsUnchecked(IEnumerable<Func<int[], int[], int[]>> additionFuncs) {
+            additionFuncs.Select(x => {
+                return new Action<int[], int[], int[]>((lhs, rhs, result) => {
                     var temp = x(lhs, rhs);
                     temp.CopyTo(result, 0);
                 });

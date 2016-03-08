@@ -8,6 +8,35 @@ namespace SimdSpike {
     public class PerformanceTests {
         private static readonly Stopwatch stopwatch = new Stopwatch();
 
+        public static void TestIntArrayAdditionFunctions(int testSetSize) {
+            WriteLine();
+            Write("Testing int array addition, generating test data...");
+            var intsOne = GetRandomIntArray(testSetSize);
+            var intsTwo = GetRandomIntArray(testSetSize);
+            WriteLine($" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                stopwatch.Restart();
+                var result = IntSimdProcessor.NaiveSumFunc(intsOne, intsTwo);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive analysis took:                {naiveTimeMs}ms (last value = {result.Last()}).");
+
+                stopwatch.Restart();
+                result = IntSimdProcessor.HWAcceleratedSumFunc(intsOne, intsTwo);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"Hareware accelerated analysis took: {hwTimeMs}ms (last value = {result.Last()}).");
+            }
+
+            WriteLine("Int array addition:");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
+
         public static void TestInPlaceFloatAddition(int testSetSize) {
             WriteLine();
             Write("Testing float array addition, generating test data...");

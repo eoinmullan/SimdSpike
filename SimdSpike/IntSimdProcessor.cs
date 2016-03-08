@@ -35,5 +35,30 @@ namespace SimdSpike {
                 max = Math.Max(max, input[i]);
             }
         }
+
+        public static int[] NaiveSumFunc(int[] lhs, int[] rhs) {
+            var length = lhs.Length;
+            var result = new int[length];
+            for (var i = 0; i < length; ++i) {
+                result[i] = lhs[i] + rhs[i];
+            }
+            return result;
+        }
+
+        public static int[] HWAcceleratedSumFunc(int[] lhs, int[] rhs) {
+            var simdLength = Vector<int>.Count;
+            var result = new int[lhs.Length];
+            var i = 0;
+            for (i = 0; i < lhs.Length - simdLength; i += simdLength) {
+                var va = new Vector<int>(lhs, i);
+                var vb = new Vector<int>(rhs, i);
+                (va + vb).CopyTo(result, i);
+            }
+            for (; i < lhs.Length; ++i) {
+                result[i] = lhs[i] + rhs[i];
+            }
+
+            return result;
+        }
     }
 }

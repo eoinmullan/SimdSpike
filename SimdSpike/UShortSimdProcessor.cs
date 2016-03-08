@@ -89,8 +89,8 @@ namespace SimdSpike {
             }
         }
 
-        internal static uint NaiveTotalOfArray(ushort[] input) {
-            uint total = 0;
+        internal static ulong NaiveTotalOfArray(ushort[] input) {
+            ulong total = 0;
             foreach (var value in input) {
                 total += value;
             }
@@ -107,17 +107,17 @@ namespace SimdSpike {
             return (ushort)result;
         }
 
-        internal static uint HWAcceleratedTotalOfArray(ushort[] input) {
-            var uintArray = Array.ConvertAll(input, x => (uint) x);
-            var simdLength = Vector<uint>.Count;
-            var vTotal = new Vector<uint>(0);
+        internal static ulong HWAcceleratedTotalOfArray(ushort[] input) {
+            var uintArray = Array.ConvertAll(input, x => (ulong) x);
+            var simdLength = Vector<ulong>.Count;
+            var vTotal = new Vector<ulong>(0);
             var i = 0;
             var lastSafeVectorIndex = uintArray.Length - simdLength;
             for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
-                var vector = new Vector<uint>(uintArray, i);
+                var vector = new Vector<ulong>(uintArray, i);
                 vTotal = Vector.Add(vTotal, vector);
             }
-            uint total = 0;
+            ulong total = 0;
             for (var j = 0; j < simdLength; ++j) {
                 total += vTotal[j];
             }

@@ -8,7 +8,7 @@ namespace SimdSpike {
     [TestFixture]
     public class UShortSimdProcessorUnitTest {
         delegate void MinMaxFunc(ushort[] input, out ushort min, out ushort max);
-        delegate uint TotalOFArrayFunc(ushort[] input);
+        delegate ulong TotalOFArrayFunc(ushort[] input);
         private int hdImageSize = 3840*2160;
         private int smallTestSet = 15;
 
@@ -86,7 +86,7 @@ namespace SimdSpike {
         private void ValidateTotalOfArrayFunction(TotalOFArrayFunc totalFunc) {
             foreach (var testSetSize in new[] { smallTestSet, hdImageSize }) {
                 var testDataSet = GetRandomUShortArray(testSetSize);
-                var expectedTotal = testDataSet.Aggregate<ushort, uint>(0, (current, value) => current + value);
+                var expectedTotal = testDataSet.Aggregate<ushort, ulong>(0, (current, value) => current + value);
 
                 var calculatedTotal = totalFunc(testDataSet);
 

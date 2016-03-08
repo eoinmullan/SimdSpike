@@ -159,33 +159,32 @@ namespace SimdSpike {
         }
 
         internal static void HWAcceleratedGetStats(ushort[] input, out ushort min, out ushort max, out double average) {
-            var uintArray = Array.ConvertAll(input, x => (ulong)x);
-            var simdLength = Vector<ulong>.Count;
-            var vmin = new Vector<ulong>(ulong.MaxValue);
-            var vmax = new Vector<ulong>(ulong.MinValue);
-            var vTotal = new Vector<ulong>(0);
+            var simdLength = Vector<ushort>.Count;
+            var vmin = new Vector<ushort>(ushort.MaxValue);
+            var vmax = new Vector<ushort>(ushort.MinValue);
             var i = 0;
-            var lastSafeVectorIndex = uintArray.Length - simdLength;
+            ulong total = 0;
+            var lastSafeVectorIndex = input.Length - simdLength;
             for (i = 0; i < lastSafeVectorIndex; i += simdLength) {
-                var va = new Vector<ulong>(uintArray, i);
+                var va = new Vector<ushort>(input, i);
                 vmin = Vector.Min(va, vmin);
                 vmax = Vector.Max(va, vmax);
-                vTotal = Vector.Add(vTotal, va);
+                for (var j = i; j < i + simdLength; j++) {
+                    total += input[j];
+                }
             }
             min = ushort.MaxValue;
             max = ushort.MinValue;
-            ulong total = 0;
             for (var j = 0; j < simdLength; ++j) {
-                min = Math.Min(min, (ushort)vmin[j]);
-                max = Math.Max(max, (ushort)vmax[j]);
-                total += vTotal[j];
+                min = Math.Min(min, vmin[j]);
+                max = Math.Max(max, vmax[j]);
             }
             for (; i < input.Length; ++i) {
                 min = Math.Min(min, input[i]);
                 max = Math.Max(max, input[i]);
                 total += input[i];
             }
-            average = total / (double)input.Length;
+            average = total/(double) input.Length;
         }
     }
 }

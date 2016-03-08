@@ -18,6 +18,10 @@ namespace SimdSpike {
             ValidateAdditionInPlaceMethods((IEnumerable<Action<float[], float[]>>)additionInPlaceActions);
         }
 
+        public static void ValidateAdditionInPlaceMethodsUnchecked(params Action<int[], int[]>[] additionInPlaceActions) {
+            ValidateAdditionInPlaceMethodsUnchecked((IEnumerable<Action<int[], int[]>>)additionInPlaceActions);
+        }
+
         public static void ValidateAdditionInPlaceMethodsUnchecked(params Action<ushort[], ushort[]>[] additionInPlaceActions) {
             ValidateAdditionInPlaceMethodsUnchecked((IEnumerable<Action<ushort[], ushort[]>>)additionInPlaceActions);
         }
@@ -94,6 +98,15 @@ namespace SimdSpike {
         private static void ValidateAdditionInPlaceMethodsUnchecked(IEnumerable<Action<ushort[], ushort[]>> additionInPlaceActions) {
             additionInPlaceActions.Select(x => {
                 return new Action<ushort[], ushort[], ushort[]>((lhs, rhs, result) => {
+                    lhs.CopyTo(result, 0);
+                    x(result, rhs);
+                });
+            }).ToList().ForEach(ValidateAdditionMethodUnchecked);
+        }
+
+        private static void ValidateAdditionInPlaceMethodsUnchecked(IEnumerable<Action<int[], int[]>> additionInPlaceActions) {
+            additionInPlaceActions.Select(x => {
+                return new Action<int[], int[], int[]>((lhs, rhs, result) => {
                     lhs.CopyTo(result, 0);
                     x(result, rhs);
                 });

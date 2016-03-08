@@ -21,8 +21,12 @@ namespace SimdSpike {
 
         [Test]
         public void ShouldAddIntArraysWithFuncs() {
-            TestHelper.ValidateAdditionFuncsUnchecked(NaiveSumFunc);
-            TestHelper.ValidateAdditionFuncsUnchecked(HWAcceleratedSumFunc);
+            TestHelper.ValidateAdditionFuncsUnchecked(NaiveSumFunc, HWAcceleratedSumFunc);
+        }
+
+        [Test]
+        public void ShouldAddFloatArraysInPlace() {
+            TestHelper.ValidateAdditionInPlaceMethodsUnchecked(NaiveSumInPlace, HwAcceleratedSumInPlace);
         }
 
         private void ValidateMinMaxFunction(MinMaxFunc minMaxFunc) {

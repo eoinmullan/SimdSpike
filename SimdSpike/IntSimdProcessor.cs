@@ -60,5 +60,26 @@ namespace SimdSpike {
 
             return result;
         }
+
+        public static void NaiveSumInPlace(int[] lhs, int[] rhs) {
+            var length = lhs.Length;
+            for (var i = 0; i < length; ++i) {
+                lhs[i] += rhs[i];
+            }
+        }
+
+        public static void HwAcceleratedSumInPlace(int[] lhs, int[] rhs) {
+            var simdLength = Vector<int>.Count;
+            var i = 0;
+            for (i = 0; i < lhs.Length - simdLength; i += simdLength) {
+                var va = new Vector<int>(lhs, i);
+                var vb = new Vector<int>(rhs, i);
+                va += vb;
+                va.CopyTo(lhs, i);
+            }
+            for (; i < lhs.Length; ++i) {
+                lhs[i] += rhs[i];
+            }
+        }
     }
 }

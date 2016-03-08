@@ -23,6 +23,7 @@ namespace SimdSpike {
 
             TestIntArrayAdditionFunctions(EightKUltraHDRes);
             TestInPlaceFloatAddition(EightKUltraHDRes);
+            TestInPlaceIntAddition(EightKUltraHDRes);
             TestUShortAdditionIntoResultsArray(EightKUltraHDRes);
             TestInPlaceUShortAddition(EightKUltraHDRes);
             TestIntMaxMinFunctions(EightKUltraHDRes);

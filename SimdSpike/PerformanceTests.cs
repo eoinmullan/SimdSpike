@@ -103,6 +103,39 @@ namespace SimdSpike {
             WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
         }
 
+        public static void TestInPlaceIntAddition(int testSetSize) {
+            WriteLine();
+            Write("Testing int array in place addition, generating test data...");
+            var ushortsOne = GetRandomIntArray(testSetSize);
+            var ushortsTwo = GetRandomIntArray(testSetSize);
+            WriteLine(" done, testing...");
+
+            var naiveTimesMs = new List<long>();
+            var hwTimesMs = new List<long>();
+            for (var i = 0; i < 3; i++) {
+                var ushortsOneCopy = new int[ushortsOne.Length];
+
+                ushortsOne.CopyTo(ushortsOneCopy, 0);
+                stopwatch.Restart();
+                IntSimdProcessor.HwAcceleratedSumInPlace(ushortsOneCopy, ushortsTwo);
+                var hwTimeMs = stopwatch.ElapsedMilliseconds;
+                hwTimesMs.Add(hwTimeMs);
+                WriteLine($"HW accelerated addition took: {hwTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
+
+                ushortsOne.CopyTo(ushortsOneCopy, 0);
+                stopwatch.Restart();
+                IntSimdProcessor.NaiveSumInPlace(ushortsOneCopy, ushortsTwo);
+                var naiveTimeMs = stopwatch.ElapsedMilliseconds;
+                naiveTimesMs.Add(naiveTimeMs);
+                WriteLine($"Naive addition took:          {naiveTimeMs}ms (last value = {ushortsOneCopy[ushortsOneCopy.Length - 1]}).");
+            }
+
+            WriteLine("Testing int array addition in place");
+            WriteLine($"Naive method average time:          {naiveTimesMs.Average():.##}");
+            WriteLine($"HW accelerated method average time: {hwTimesMs.Average():.##}");
+            WriteLine($"Hardware speedup:                   {naiveTimesMs.Average() / hwTimesMs.Average():P}%");
+        }
+
         public static void TestUShortAdditionIntoResultsArray(int testSetSize) {
             WriteLine();
             Write("Testing ushort array addition into results array, generating test data...");
